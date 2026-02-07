@@ -11,7 +11,7 @@ I will do my best to follow the main steps as covered at the beginning of ***Cha
 <li>Get the data</li>
 <li>Explore the data</li>
 <li>Prepare the data to better expose the underlying data patterns to the machine learning algorithms</li>
-<li>Expore different models</li>
+<li>Explore different models</li>
 <li>Fine-tune models and combine the into a great solution</li>
 <li>Present solution</li>
 <br/>Optional: <li>Launch, monitor and maintain</li>
