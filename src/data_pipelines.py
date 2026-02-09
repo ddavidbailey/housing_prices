@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder, OrdinalEncoder, FunctionTransformer
-from sklearn.pipeline import make_pipeline, Pipeline
-from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import make_pipeline
+from sklearn.compose import ColumnTransformer, make_column_transformer
 
 # Lists of all features for each data type
 num_cols = ['MSSubClass', 'LotFrontage', 'LotArea', 'OverallQual', 'OverallCond','YearBuilt', 'YearRemodAdd', 'MasVnrArea', 'BsmtFinSF1', 'BsmtFinSF2','BsmtUnfSF', 'TotalBsmtSF', '1stFlrSF', '2ndFlrSF', 'LowQualFinSF','GrLivArea', 'BsmtFullBath', 'BsmtHalfBath', 'FullBath', 'HalfBath','BedroomAbvGr', 'KitchenAbvGr', 'TotRmsAbvGrd', 'Fireplaces','GarageYrBlt', 'GarageCars', 'GarageArea', 'WoodDeckSF', 'OpenPorchSF','EnclosedPorch', '3SsnPorch', 'ScreenPorch', 'PoolArea', 'MiscVal','MoSold', 'YrSold']
@@ -26,7 +26,7 @@ def ratio_pipeline():
 def column_ratio(X):
     num = X[:, [0]]
     den = X[:, [1]]
-    return np.divide(num, den, out=np.zeros_like(num, dtype=float), where=den!=0)
+    return np.divide(num, den, out=np.zeros_like(num, dtype=float), where=den!=0)# Creates a zeros array of size num. Fills only the the positions in the array with the result when denominator != 0
 
 def column_name(function_transformer, function_names_in):
     return ["ratio"]
@@ -40,7 +40,7 @@ def sum_ratio_pipeline():
 def column_sum_ratio(X):
     num = X[:, [0]] + X[:,[1]]
     den = X[:, [2]]
-    return np.divide(num, den, out=np.zeros_like(num, dtype=float), where=den!=0)
+    return np.divide(num, den, out=np.zeros_like(num, dtype=float), where=den!=0)# Creates a zeros array of size num. Fills only the the positions in the array with the result when denominator != 0
     
 def column_sr_name(function_transformer, function_names_in):
     return ["sum_ratio"]
@@ -56,6 +56,21 @@ preprocessing = ColumnTransformer([
 
 feature_eng = ColumnTransformer([
     ("TotalBsmtFinSF", make_pipeline(sum_ratio_pipeline()), ["nums__BsmtFinSF1", "nums__BsmtFinSF2", "nums__TotalBsmtSF"]),
-    ("OverallQual_Cond",make_pipeline(ratio_pipeline()), ["nums__OverallQual","nums__OverallCond"])],
+    ("OverallQual_Cond",make_pipeline(ratio_pipeline()), ["nums__OverallQual","nums__OverallCond"]),
+    ("BsmtBathPerSF", make_pipeline(sum_ratio_pipeline()),
+    ["nums__BsmtFullBath", "nums__BsmtHalfBath", "nums__TotalBsmtSF"]),
+    ("AbvGrBathPerSF", make_pipeline(sum_ratio_pipeline()), ["nums__FullBath", "nums__HalfBath", "nums__GrLivArea"]),
+    ("AbvGrSFPerRoom", make_pipeline(sum_ratio_pipeline()), ["nums__1stFlrSF", "nums__2ndFlrSF", "nums__TotRmsAvgGrd"]),
+    ("BmstQual_Cond", make_pipeline(ratio_pipeline()), ["na_ord_cols__BmstQual", "na_ord_cols__BsmtCond"])],
     remainder="passthrough"
+)
+
+# Performs StandardScaler on all features
+standard_scaling = make_column_transformer(
+    remainder=StandardScaler()
+)
+
+# Performs MinMaxScaler on all features
+minmax_scaler = make_column_transformer(
+    remainder=MinMaxScaler(feature_range=(-1,1))
 )
