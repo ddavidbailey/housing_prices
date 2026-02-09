@@ -24,7 +24,9 @@ def ratio_pipeline():
     )
 
 def column_ratio(X):
-    return X[:, [0]] / X[:, [1]]
+    num = X[:, [0]]
+    den = X[:, [1]]
+    return np.divide(num, den, out=np.zeros_like(num, dtype=float), where=den!=0)
 
 def column_name(function_transformer, function_names_in):
     return ["ratio"]
@@ -36,9 +38,10 @@ def sum_ratio_pipeline():
     )
 
 def column_sum_ratio(X):
-    return (X[:,[0]] + X[:,[1]]) / X[:, [2]]
+    num = X[:, [0]] + X[:,[1]]
+    den = X[:, [2]]
+    return np.divide(num, den, out=np.zeros_like(num, dtype=float), where=den!=0)
     
-
 def column_sr_name(function_transformer, function_names_in):
     return ["sum_ratio"]
 
