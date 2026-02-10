@@ -56,7 +56,7 @@ preprocessing = ColumnTransformer([
 
 feature_eng = ColumnTransformer([
     ("TotalBsmtFinSF", make_pipeline(sum_ratio_pipeline()), ["nums__BsmtFinSF1", "nums__BsmtFinSF2", "nums__TotalBsmtSF"]),
-    ("OverallQual_Cond",make_pipeline(ratio_pipeline()), ["nums__OverallQual","nums__OverallCond"]),
+    ("OverallQual_Cond", make_pipeline(ratio_pipeline()), ["nums__OverallQual","nums__OverallCond"]),
     ("BsmtBathPerSF", make_pipeline(sum_ratio_pipeline()),
     ["nums__BsmtFullBath", "nums__BsmtHalfBath", "nums__TotalBsmtSF"]),
     ("AbvGrBathPerSF", make_pipeline(sum_ratio_pipeline()), ["nums__FullBath", "nums__HalfBath", "nums__GrLivArea"]),
@@ -66,11 +66,11 @@ feature_eng = ColumnTransformer([
 )
 
 # Performs StandardScaler on all features
-standard_scaling = make_column_transformer(
+standard_scaling = ColumnTransformer([],
     remainder=StandardScaler()
 )
 
 # Performs MinMaxScaler on all features
-minmax_scaler = make_column_transformer(
+minmax_scaler = ColumnTransformer([],
     remainder=MinMaxScaler(feature_range=(-1,1))
 )
