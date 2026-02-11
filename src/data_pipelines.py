@@ -63,7 +63,8 @@ feature_eng = ColumnTransformer([
     ("AbvGrSFPerRoom", make_pipeline(sum_ratio_pipeline()), ["nums__1stFlrSF", "nums__2ndFlrSF", "nums__TotRmsAbvGrd"]),
     ("BmstQual_Cond", make_pipeline(ratio_pipeline()), ["na_ord_cols__BsmtQual", "na_ord_cols__BsmtCond"]),
     ("GarageQual_Cond", make_pipeline(ratio_pipeline()), ["na_ord_cols__GarageQual", "na_ord_cols__GarageCond"]),
-    ("GarageFinish_Qual_Cond", make_pipeline(sum_ratio_pipeline()), ["na_ord_cols__GarageQual", "na_ord_cols__GarageCond", "na_ord_cols__GarageFinish"])
+    ("GarageFinish_Qual_Cond", make_pipeline(sum_ratio_pipeline()), ["na_ord_cols__GarageQual", "na_ord_cols__GarageCond", "na_ord_cols__GarageFinish"]),
+    ("Exter_Kitchen_Qual", make_pipeline(ratio_pipeline()), ["ord_cols__ExterQual", "ord_cols__KitchenQual"])
     ],
     remainder="passthrough"
 )
